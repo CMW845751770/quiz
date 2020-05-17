@@ -8,7 +8,7 @@
   
  用户模块包含用户的注册、登录、修改用户信息等；安全模块使用SpringSecurity开发了基于JWT token的认证方式以及基于角色的授权，并且使用了全局的异常处理机制以及基于拦截器+注解实现的接口限流；实现了选择题的生成、校对、打分等功能；编程题模块实现了列表以及提交判断等功能。
 
-##项目截图
+## 项目截图
 ![enter image description here](http://img.sgxm.tech/01.PNG)
 ![enter image description here](http://img.sgxm.tech/02.PNG)
 ![enter image description here](http://img.sgxm.tech/03.PNG)
