@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.tju.system.mapper.TestExampleMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.tju.system.entity.TestExample" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="input" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="output" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, input, output, pid, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from quiz_test_example
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPid" resultType="cn.edu.tju.system.entity.TestExample">
+    select
+    <include refid="Base_Column_List"/>
+    from quiz_test_example where pid = #{pid}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from quiz_test_example
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.tju.system.entity.TestExample" >
+    insert into quiz_test_example (id, input, output, 
+      pid, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{input,jdbcType=VARCHAR}, #{output,jdbcType=VARCHAR}, 
+      #{pid,jdbcType=INTEGER}, now(), now()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.tju.system.entity.TestExample" >
+    insert into quiz_test_example
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="input != null" >
+        input,
+      </if>
+      <if test="output != null" >
+        output,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="input != null" >
+        #{input,jdbcType=VARCHAR},
+      </if>
+      <if test="output != null" >
+        #{output,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        now(),
+      </if>
+      <if test="updateTime != null" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+</mapper>

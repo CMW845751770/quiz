@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.tju.system.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.tju.system.entity.User" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="username" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="roleid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="status" jdbcType="BIT" javaType="java.lang.Boolean" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, password, email, roleid, status, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from quiz_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByEmail" resultType="cn.edu.tju.system.entity.User">
+    select
+    <include refid="Base_Column_List"/>
+    from quiz_user where email = #{email}
+  </select>
+    <select id="selectTotalCount" resultType="java.lang.Integer">
+      select count(1) from quiz_user
+    </select>
+  <select id="selectByEmailStatus" resultType="cn.edu.tju.system.entity.User">
+    select
+    <include refid="Base_Column_List"/>
+    from quiz_user where email = #{email} and status = #{status}
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from quiz_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.tju.system.entity.User" >
+    insert into quiz_user (id, username, password, 
+      email, roleid, status, 
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{roleid,jdbcType=INTEGER}, #{status,jdbcType=BIT}, 
+      now(), now())
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.tju.system.entity.User" >
+    insert into quiz_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="roleid != null" >
+        roleid,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="roleid != null" >
+        #{roleid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        now(),
+      </if>
+      <if test="updateTime != null" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+    <update id="updatePasswordByEmail">
+      update quiz_user set password = #{password} where email = #{email}
+    </update>
+  <update id="updateStatusByEmail">
+    update quiz_user set status = #{status} where email = #{email}
+  </update>
+  <update id="updateUsernameBYPrimaryKey">
+    update quiz_user set username = #{username} where id = #{id}
+  </update>
+</mapper>

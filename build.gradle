@@ -1,0 +1,43 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.13.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+}
+
+group = 'cn.edu.tju'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+}
+
+dependencies {
+    compile ('com.github.pagehelper:pagehelper-spring-boot-starter:1.2.10'){
+        exclude group: 'org.mybatis.spring.boot' //by group
+        exclude group: 'org.springframework.boot' //by group
+    }
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    compile group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
+    runtime group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.10.7'
+    runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.10.7'
+    compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.10.7'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.2'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.amqp:spring-rabbit-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}

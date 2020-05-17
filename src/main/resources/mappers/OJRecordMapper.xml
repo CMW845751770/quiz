@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.tju.system.mapper.OJRecordMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.tju.system.entity.OJRecord" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="uid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="pid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="pass" jdbcType="TINYINT" javaType="java.lang.Boolean" />
+      <arg column="time" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="info" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, uid, pid, pass, time, create_time, update_time, info
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from quiz_oj_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="rank" resultType="cn.edu.tju.system.dto.output.OJRankListDTO">
+      SELECT u.id as uid,u.username,(select count(distinct rr.pid) from quiz_oj_record rr
+      where uid = u.id and rr.pass = 1) as passCount FROM `quiz_oj_record` r
+      join quiz_user u on r.uid = u.id group by u.id order by passCount desc
+    </select>
+    <select id="myRank" resultType="cn.edu.tju.system.dto.output.OJRankListDTO">
+      SELECT u.id as uid,(select count(distinct rr.pid) from quiz_oj_record rr
+      where uid = u.id and rr.pass = 1) as passCount FROM `quiz_oj_record` r
+      join quiz_user u on r.uid = u.id group by u.id order by passCount desc
+    </select>
+  <select id="selectPassCountByUidDifficulty" resultType="java.lang.Integer">
+    SELECT count(distinct p.id) FROM `quiz_oj_record` r join quiz_oj_problem p on r.pid = p.id
+    where r.uid = #{uid} and r.pass = #{pass} and p.difficulty = #{difficulty}
+  </select>
+    <select id="selectProgress" resultType="cn.edu.tju.back.dto.output.OJProgressOutputDTO">
+      select datediff(now(),r.create_time) as daysFromNow,r.pass,p.title from quiz_oj_record r join quiz_oj_problem p on
+      r.pid = p.id order by r.create_time desc
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from quiz_oj_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.tju.system.entity.OJRecord" >
+    insert into quiz_oj_record (id, uid, pid, 
+      pass, time, create_time, 
+      update_time, info)
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, 
+      #{pass,jdbcType=TINYINT}, #{time,jdbcType=DECIMAL}, now(),
+      now(), #{info,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.tju.system.entity.OJRecord" >
+    insert into quiz_oj_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="pass != null" >
+        pass,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="info != null" >
+        info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="pass != null" >
+        #{pass,jdbcType=TINYINT},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        now(),
+      </if>
+      <if test="updateTime != null" >
+        now(),
+      </if>
+      <if test="info != null" >
+        #{info,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

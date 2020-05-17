@@ -1,0 +1,48 @@
+server:
+  port: 8080
+spring:
+  mail:
+    host: smtp.qq.com
+    username: 1234567890@qq.com
+    password: abcdefghijklmnop
+    protocol: smtp
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.port: 465
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
+    template:
+      mandatory: true #不开启 则死信不会return
+    publisher-confirms: true #开启confirm机制
+    publisher-returns: true #开启死信返回机制
+    connection-timeout: 15000
+    listener:
+      direct:
+        acknowledge-mode: manual  #手动ack
+      simple:
+        concurrency: 1
+        max-concurrency: 5
+  redis:
+    host: localhost
+    port: 6379
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    url: jdbc:mysql://localhost:3306/quiz?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=CTT
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  type-aliases-package: cn.edu.tju.system.entity
+  mapper-locations: classpath:mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+logging:
+  level:
+    cn.edu.tju.system.mapper: debug

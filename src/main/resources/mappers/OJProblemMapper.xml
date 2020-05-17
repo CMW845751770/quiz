@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.tju.system.mapper.OJProblemMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.tju.system.entity.OJProblem" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="title" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="description" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="timeout" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="type_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="difficulty" jdbcType="BIT" javaType="java.lang.Short" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, description, timeout, type_id, difficulty, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from quiz_oj_problem
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultType="cn.edu.tju.system.dto.output.OJProblemListDTO">
+    select p.id as id,p.title as title,p.type_id as typeId,(select IFNULL(max(r.pass),0) from quiz_oj_record r
+    where r.pid = p.id and uid = #{uid}) as pass,p.difficulty,p.create_time
+    as createTime,p.update_time as updateTime from quiz_oj_problem p
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from quiz_oj_problem
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.tju.system.entity.OJProblem" >
+    insert into quiz_oj_problem (id, title, description,
+      timeout, type_id, difficulty,
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+      #{timeout,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, #{difficulty,jdbcType=BIT},
+      now(), now())
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.tju.system.entity.OJProblem" >
+    insert into quiz_oj_problem
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="timeout != null" >
+        timeout,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="difficulty != null" >
+        difficulty,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="timeout != null" >
+        #{timeout,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="difficulty != null" >
+        #{difficulty,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        now(),
+      </if>
+      <if test="updateTime != null" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+</mapper>

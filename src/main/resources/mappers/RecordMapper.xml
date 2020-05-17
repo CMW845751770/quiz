@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.tju.system.mapper.RecordMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.tju.system.entity.Record" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="uid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="score" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, uid, score, create_time, update_time
+  </sql>
+    <update id="updateScoreByPrimaryUid">
+      update quiz_record set `score` = `score` + 5 where id = #{id} and uid = #{uid}
+    </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from quiz_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectRecentRecordByUid" resultType="cn.edu.tju.system.entity.Record">
+    SELECT <include refid="Base_Column_List"/>
+    FROM quiz_record WHERE create_time &lt;= now() and uid = #{uid} ORDER BY create_time DESC LIMIT 1
+  </select>
+  <select id="rank" resultType="cn.edu.tju.system.dto.output.RankListDTO">
+    SELECT u.id uid,u.username,max(r.score) score FROM `quiz_record` r join quiz_user u on r.uid = u.id group by uid order by score desc
+  </select>
+    <select id="selectScoreByPrimaryKey" resultType="java.lang.Integer">
+      select score from quiz_record where id = #{id}
+    </select>
+    <select id="myRank" resultType="cn.edu.tju.system.dto.output.RankListDTO">
+      SELECT r.uid uid,max(r.score) score FROM `quiz_record` r group by uid order by score desc
+    </select>
+  <select id="selectLastFiveScores" resultType="java.lang.Integer">
+    select score from quiz_record where uid = #{uid} order by create_time desc limit 5
+  </select>
+  <select id="selectAvgScore" resultType="java.lang.Double">
+    select avg(r.score) from quiz_record r where uid = #{uid}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from quiz_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.tju.system.entity.Record" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into quiz_record (id, uid, score, 
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{score,jdbcType=INTEGER}, 
+      now(), now())
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.tju.system.entity.Record" >
+    insert into quiz_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        now(),
+      </if>
+      <if test="updateTime != null" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+</mapper>
