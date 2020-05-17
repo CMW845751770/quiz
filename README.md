@@ -4,8 +4,9 @@
 - 用户模块
 - 安全模块
 - 选择题
-- 编程题
-用户模块包含用户的注册、登录、修改用户信息等；安全模块使用SpringSecurity开发了基于JWT token的认证方式以及基于角色的授权，并且使用了全局的异常处理机制以及基于拦截器+注解四线的接口限流；实现了选择题的生成、校对、打分等功能；编程题模块实现了列表以及提交判断等功能。
+- 编程题  
+  
+ 用户模块包含用户的注册、登录、修改用户信息等；安全模块使用SpringSecurity开发了基于JWT token的认证方式以及基于角色的授权，并且使用了全局的异常处理机制以及基于拦截器+注解四线的接口限流；实现了选择题的生成、校对、打分等功能；编程题模块实现了列表以及提交判断等功能。
 ##项目截图
 ![enter image description here](http://img.sgxm.tech/01.PNG)
 ![enter image description here](http://img.sgxm.tech/02.PNG)
@@ -15,7 +16,7 @@
 ![enter image description here](http://img.sgxm.tech/06.PNG)
 ![enter image description here](http://img.sgxm.tech/07.PNG)
 ![enter image description here](http://img.sgxm.tech/08.PNG)
-项目的演示地址为47.101.33.252 因为没有备案的服务器的域名。所以直接就是用IP了。该项目是前后端分离的，前端项目地址https://github.com/DeluxeZ/oj_web。
+项目的演示地址为http://47.101.33.252 因为没有备案的服务器和域名。所以直接就是用IP了。该项目是前后端分离的，前端项目地址https://github.com/DeluxeZ/oj_web。
 ## 技术选型
 | 技术                 | 说明                | 官网                                                         |
 | -------------------- | ------------------- | ------------------------------------------------------------ |
