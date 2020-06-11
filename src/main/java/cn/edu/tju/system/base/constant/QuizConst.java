@@ -16,4 +16,6 @@ public class QuizConst {
     public static final int RESPONSE_PROBLEM_COUNT = 1 ;
     //题目的过期时间
     public static final int PROBLEM_EXPIRES_SECONDS = 60+2 ;
+
+    public static final String TIME_RANK_BLOCKS = "15" ;
 }

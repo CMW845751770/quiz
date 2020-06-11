@@ -12,4 +12,8 @@ public interface OJService {
     ServerResponse myRank() ;
 
     ServerResponse progress(PageBackInputDTO page) ;
+
+    ServerResponse timeRank(Integer rid) ;
+
+    ServerResponse submitRecord(Integer year);
 }

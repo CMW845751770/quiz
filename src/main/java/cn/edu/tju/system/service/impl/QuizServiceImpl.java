@@ -15,7 +15,10 @@ import cn.edu.tju.system.mapper.OptionMapper;
 import cn.edu.tju.system.mapper.ProblemMapper;
 import cn.edu.tju.system.mapper.RecordMapper;
 import cn.edu.tju.system.service.QuizService;
+import cn.edu.tju.system.utils.JacksonUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -153,7 +156,7 @@ public class QuizServiceImpl implements QuizService {
      */
     @Transactional
     @Override
-    public ServerResponse validate(Integer pid, List<Integer> optionId) {
+    public ServerResponse validate(Integer pid, List<Integer> optionId) throws JsonProcessingException {
         CurrentUser currentUser = CurrentUser.getCurrentUser();
         Integer rid = redisTemplate.opsForValue().get(String.format(QuizConst.QUIZ_RECORD_PREFIX,
                 currentUser.getId()));
@@ -167,7 +170,8 @@ public class QuizServiceImpl implements QuizService {
             answer.setCorrect(false)
                     .setPid(pid)
                     .setRid(rid)
-                    .setUid(currentUser.getId());
+                    .setUid(currentUser.getId())
+                    .setOptionId(JacksonUtil.bean2Json(Lists.newArrayList()));
             answerMapper.insert(answer);
             return ServerResponse.createByErrorMessage("该题目答题已结束");
         }
@@ -193,7 +197,8 @@ public class QuizServiceImpl implements QuizService {
         answer.setCorrect(correct)
                 .setPid(pid)
                 .setRid(rid)
-                .setUid(currentUser.getId());
+                .setUid(currentUser.getId())
+                .setOptionId(JacksonUtil.bean2Json(optionId));
         answerMapper.insert(answer);
         //更新一下分数
         if(correct){

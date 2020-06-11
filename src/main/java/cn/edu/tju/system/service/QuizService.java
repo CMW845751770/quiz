@@ -2,6 +2,7 @@ package cn.edu.tju.system.service;
 
 import cn.edu.tju.system.base.ServerResponse;
 import cn.edu.tju.system.dto.input.PageInputDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface QuizService {
 
     ServerResponse list() ;
 
-    ServerResponse validate(Integer pid , List<Integer> optionId) ;
+    ServerResponse validate(Integer pid , List<Integer> optionId) throws JsonProcessingException;
 
     ServerResponse getResult() ;
 

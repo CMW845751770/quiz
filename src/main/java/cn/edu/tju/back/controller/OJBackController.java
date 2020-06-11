@@ -2,13 +2,16 @@ package cn.edu.tju.back.controller;
 
 import cn.edu.tju.back.dto.input.PageBackInputDTO;
 import cn.edu.tju.back.service.OJService;
+import cn.edu.tju.system.base.ResponseCode;
 import cn.edu.tju.system.base.ServerResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Calendar;
 
 /**
  * @Author: CMW天下第一
@@ -41,4 +44,16 @@ public class OJBackController {
         return ojServiceImpl.progress(page) ;
     }
 
+    @GetMapping("/progress/{rid}")
+    public ServerResponse timeRank(@PathVariable("rid")Integer rid){
+        return ojServiceImpl.timeRank(rid) ;
+    }
+
+    @GetMapping("/progress/submit")
+    public ServerResponse submitRecord(Integer year){
+        if(year == null || year < 1970 || year > Calendar.getInstance().get(Calendar.YEAR)){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT) ;
+        }
+        return ojServiceImpl.submitRecord(year) ;
+    }
 }

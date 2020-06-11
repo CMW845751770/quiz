@@ -28,7 +28,7 @@
     from quiz_user where email = #{email}
   </select>
     <select id="selectTotalCount" resultType="java.lang.Integer">
-      select count(1) from quiz_user
+      select count(1) from quiz_user where status = 1
     </select>
   <select id="selectByEmailStatus" resultType="cn.edu.tju.system.entity.User">
     select

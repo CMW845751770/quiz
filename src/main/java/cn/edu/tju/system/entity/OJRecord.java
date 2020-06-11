@@ -30,4 +30,19 @@ public class OJRecord {
     private Date updateTime;
 
     private String info;
+
+    public OJRecord(Integer id, Integer uid, Integer pid, Boolean pass, BigDecimal time, Date createTime, Date updateTime, String info) {
+        this.id = id;
+        this.uid = uid;
+        this.pid = pid;
+        this.pass = pass;
+        this.time = time;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.info = info;
+    }
+
+    private Integer passTestExample ;
+
+    private Integer totalTestExample ;
 }

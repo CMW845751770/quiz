@@ -5,6 +5,7 @@ import cn.edu.tju.system.base.ServerResponse;
 import cn.edu.tju.system.dto.input.PageInputDTO;
 import cn.edu.tju.system.dto.output.RankListDTO;
 import cn.edu.tju.system.service.QuizService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
@@ -36,7 +37,7 @@ public class QuizController {
     }
 
     @PostMapping("validate")
-    public ServerResponse validate(@RequestParam("pid") Integer pid ,@RequestParam("optionId") List<Integer> optionIds){
+    public ServerResponse validate(@RequestParam("pid") Integer pid ,@RequestParam("optionId") List<Integer> optionIds) throws JsonProcessingException {
         return quizServiceImpl.validate(pid,optionIds) ;
     }
 

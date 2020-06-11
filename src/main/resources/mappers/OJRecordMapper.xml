@@ -25,31 +25,60 @@
     <select id="rank" resultType="cn.edu.tju.system.dto.output.OJRankListDTO">
       SELECT u.id as uid,u.username,(select count(distinct rr.pid) from quiz_oj_record rr
       where uid = u.id and rr.pass = 1) as passCount FROM `quiz_oj_record` r
-      join quiz_user u on r.uid = u.id group by u.id order by passCount desc
+      join quiz_user u on r.uid = u.id group by u.id order by passCount desc,u.id asc
     </select>
     <select id="myRank" resultType="cn.edu.tju.system.dto.output.OJRankListDTO">
       SELECT u.id as uid,(select count(distinct rr.pid) from quiz_oj_record rr
       where uid = u.id and rr.pass = 1) as passCount FROM `quiz_oj_record` r
-      join quiz_user u on r.uid = u.id group by u.id order by passCount desc
+      join quiz_user u on r.uid = u.id group by u.id order by passCount desc,u.id asc
     </select>
   <select id="selectPassCountByUidDifficulty" resultType="java.lang.Integer">
     SELECT count(distinct p.id) FROM `quiz_oj_record` r join quiz_oj_problem p on r.pid = p.id
     where r.uid = #{uid} and r.pass = #{pass} and p.difficulty = #{difficulty}
   </select>
     <select id="selectProgress" resultType="cn.edu.tju.back.dto.output.OJProgressOutputDTO">
-      select datediff(now(),r.create_time) as daysFromNow,r.pass,p.title from quiz_oj_record r join quiz_oj_problem p on
-      r.pid = p.id order by r.create_time desc
+      select r.id,datediff(now(),r.create_time) as daysFromNow,r.pass,p.title from quiz_oj_record r join quiz_oj_problem p on
+      r.pid = p.id where r.uid = #{uid} order by r.create_time desc
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKeyUid" resultType="cn.edu.tju.system.entity.OJRecord">
+    select
+    id, uid, pid, pass, `time`, pass_test_example,total_test_example ,create_time, update_time, info
+    from quiz_oj_record where id = #{rid} and uid = #{uid}
+  </select>
+    <select id="selectTime" resultType="java.math.BigDecimal">
+      SELECT r.time FROM `quiz_oj_record` r where r.pid = #{pid} and r.pass = 1 order by time asc
+    </select>
+  <select id="selectSubmitRecord" resultType="cn.edu.tju.back.dto.output.SubmitRecordOutputDTO">
+    SELECT
+	DATEDIFF( r.create_time, CONCAT(#{selectYear},"-01-01") ) AS days,
+	(
+	SELECT
+		count(rr.id)
+	FROM
+		quiz_oj_record rr
+	WHERE
+		DATEDIFF( rr.create_time, CONCAT(#{selectYear},"-01-01") ) = DATEDIFF( r.create_time, CONCAT(#{selectYear},"-01-01") )
+	) AS submitCount
+FROM
+	quiz_oj_record r
+WHERE
+	r.uid = #{uid}
+GROUP BY
+	days
+ORDER BY
+	days DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from quiz_oj_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.edu.tju.system.entity.OJRecord" >
     insert into quiz_oj_record (id, uid, pid, 
-      pass, time, create_time, 
+      pass, `time`, pass_test_example,total_test_example,create_time,
       update_time, info)
     values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, 
-      #{pass,jdbcType=TINYINT}, #{time,jdbcType=DECIMAL}, now(),
+      #{pass,jdbcType=TINYINT}, #{time,jdbcType=DECIMAL}, #{passTestExample,jdbcType=INTEGER},
+      #{totalTestExample,jdbcType=INTEGER},now(),
       now(), #{info,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.tju.system.entity.OJRecord" >

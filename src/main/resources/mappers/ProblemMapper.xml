@@ -22,7 +22,10 @@
     <select id="selectCount" resultType="java.lang.Integer">
       select count(1) from quiz_problem
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <select id="selectDescriptionByPrimaryKey" resultType="java.lang.String">
+    select description from quiz_problem where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from quiz_problem
     where id = #{id,jdbcType=INTEGER}
   </delete>

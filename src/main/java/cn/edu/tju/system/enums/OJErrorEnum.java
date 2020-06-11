@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public enum OJErrorEnum {
 
-    TIME_LIMIT_EXCEPTION("time limit exception"),
-    COMPILATION_ERROR("compilation error") ;
+    TIME_LIMIT_EXCEPTION("time limit exceeded"),
+    COMPILATION_ERROR("编译错误") ;
 
     @Getter
     private String error ;

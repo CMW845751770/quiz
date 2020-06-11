@@ -27,13 +27,14 @@
     FROM quiz_record WHERE create_time &lt;= now() and uid = #{uid} ORDER BY create_time DESC LIMIT 1
   </select>
   <select id="rank" resultType="cn.edu.tju.system.dto.output.RankListDTO">
-    SELECT u.id uid,u.username,max(r.score) score FROM `quiz_record` r join quiz_user u on r.uid = u.id group by uid order by score desc
+    SELECT u.id uid,u.username,max(r.score) score FROM `quiz_record` r join quiz_user u on r.uid = u.id
+    group by uid order by score desc,u.id asc
   </select>
     <select id="selectScoreByPrimaryKey" resultType="java.lang.Integer">
       select score from quiz_record where id = #{id}
     </select>
     <select id="myRank" resultType="cn.edu.tju.system.dto.output.RankListDTO">
-      SELECT r.uid uid,max(r.score) score FROM `quiz_record` r group by uid order by score desc
+      SELECT r.uid uid,max(r.score) score FROM `quiz_record` r group by uid order by score desc,uid asc
     </select>
   <select id="selectLastFiveScores" resultType="java.lang.Integer">
     select score from quiz_record where uid = #{uid} order by create_time desc limit 5

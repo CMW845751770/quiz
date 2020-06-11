@@ -27,7 +27,7 @@
     where r.pid = p.id and uid = #{uid}) as pass,p.difficulty,p.create_time
     as createTime,p.update_time as updateTime from quiz_oj_problem p
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from quiz_oj_problem
     where id = #{id,jdbcType=INTEGER}
   </delete>

@@ -1,94 +1,114 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.edu.tju.system.mapper.AnswerMapper" >
-  <resultMap id="BaseResultMap" type="cn.edu.tju.system.entity.Answer" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="pid" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="correct" jdbcType="BIT" javaType="java.lang.Boolean" />
-      <arg column="uid" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="rid" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-    </constructor>
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="cn.edu.tju.system.mapper.AnswerMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.tju.system.entity.Answer">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="pid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="correct" jdbcType="BIT" javaType="java.lang.Boolean"/>
+            <arg column="uid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="rid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, pid, correct, uid, rid, create_time, update_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from quiz_answer
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <select id="selectCountByRidUid" resultType="java.lang.Integer">
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from quiz_answer
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectCountByRidUid" resultType="java.lang.Integer">
     SELECT count(1) FROM `quiz_answer` where rid = #{rid} and uid = #{uid} and correct = #{correct}
   </select>
     <select id="selectProblemCount" resultType="java.lang.Integer">
       SELECT count(distinct(a.pid)) as totalCount FROM `quiz_answer` a where a.uid = #{uid}
     </select>
-  <select id="selectCorrectRate" resultType="java.lang.Double">
+    <select id="selectCorrectRate" resultType="java.lang.Double">
     select (select count(id) from quiz_answer where correct = 1 and uid = #{uid})/(SELECT count(id) FROM `quiz_answer` where uid = #{uid})
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectErrorRankInof" resultType="cn.edu.tju.back.dto.output.ErrorRankInfoOutputDTO">
+    SELECT
+	p.id AS pid,
+	p.description AS description,
+    p.type_id AS typeId,
+	( SELECT count( DISTINCT aa.id ) FROM quiz_answer aa WHERE aa.pid = p.id ) AS totalCount,
+	IFNULL((select count(distinct aa.id) from quiz_answer aa where aa.pid = p.id and aa.correct = 0)/(select count(distinct aa.id) from quiz_answer aa where aa.pid = p.id),0)
+	AS errorRate
+FROM
+	quiz_answer a
+	RIGHT JOIN quiz_problem p ON a.pid = p.id
+GROUP BY
+	p.id
+ORDER BY
+	errorRate DESC,
+	totalCount desc,p.id ASC
+  </select>
+    <select id="selectOptionIdByPid" resultType="java.lang.String">
+        select option_id from quiz_answer where pid = #{pid}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from quiz_answer
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="cn.edu.tju.system.entity.Answer" >
+    <insert id="insert" parameterType="cn.edu.tju.system.entity.Answer">
     insert into quiz_answer (id, pid, correct, 
-      uid, rid, create_time, 
+      uid, rid,option_id, create_time,
       update_time)
     values (#{id,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{correct,jdbcType=BIT}, 
-      #{uid,jdbcType=INTEGER}, #{rid,jdbcType=INTEGER}, now(),
+      #{uid,jdbcType=INTEGER}, #{rid,jdbcType=INTEGER},#{optionId,jdbcType=VARCHAR}, now(),
      now())
   </insert>
-  <insert id="insertSelective" parameterType="cn.edu.tju.system.entity.Answer" >
-    insert into quiz_answer
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="pid != null" >
-        pid,
-      </if>
-      <if test="correct != null" >
-        correct,
-      </if>
-      <if test="uid != null" >
-        uid,
-      </if>
-      <if test="rid != null" >
-        rid,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="pid != null" >
-        #{pid,jdbcType=INTEGER},
-      </if>
-      <if test="correct != null" >
-        #{correct,jdbcType=BIT},
-      </if>
-      <if test="uid != null" >
-        #{uid,jdbcType=INTEGER},
-      </if>
-      <if test="rid != null" >
-        #{rid,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        now(),
-      </if>
-      <if test="updateTime != null" >
-        now(),
-      </if>
-    </trim>
-  </insert>
+    <insert id="insertSelective" parameterType="cn.edu.tju.system.entity.Answer">
+        insert into quiz_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="pid != null">
+                pid,
+            </if>
+            <if test="correct != null">
+                correct,
+            </if>
+            <if test="uid != null">
+                uid,
+            </if>
+            <if test="rid != null">
+                rid,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="pid != null">
+                #{pid,jdbcType=INTEGER},
+            </if>
+            <if test="correct != null">
+                #{correct,jdbcType=BIT},
+            </if>
+            <if test="uid != null">
+                #{uid,jdbcType=INTEGER},
+            </if>
+            <if test="rid != null">
+                #{rid,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                now(),
+            </if>
+            <if test="updateTime != null">
+                now(),
+            </if>
+        </trim>
+    </insert>
 </mapper>

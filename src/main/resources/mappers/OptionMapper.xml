@@ -41,6 +41,9 @@
     <select id="selectByPid" resultType="cn.edu.tju.system.entity.OptionDO">
         select id,description,correct from quiz_option where pid = ${pid}
     </select>
+    <select id="selectOptionByPid" resultType="cn.edu.tju.back.dto.output.ErrorRankInfoOptionOutputDTO">
+        select id as optionId,description from quiz_option where pid = #{pid}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from quiz_option
     where id = #{id,jdbcType=INTEGER}

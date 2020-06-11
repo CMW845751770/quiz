@@ -11,6 +11,8 @@ import lombok.ToString;
 @ToString
 public class OJProgressOutputDTO {
 
+    private Integer id ;
+
     private Integer daysFromNow ;
 
     private Boolean pass ;

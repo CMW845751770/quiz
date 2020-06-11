@@ -56,23 +56,26 @@ public class Judge {
             //多个测试用例迭代测试
             List<TestExample> testExampleList = ojProblem.getTestExampleList();
             String result = "";
+            int passCount = 0;
+            int totalCount = testExampleList.size();
             for (TestExample testExample : testExampleList) {
                 MkMain.mkMainFile(testExample.getInput(), testExample.getOutput(),
                         ojProblem.getTimeout() * 1000);
                 String cmd = cmdCompileMMT + "&&" + cmdRunMT;
                 result = runBash(cmd, "code");
                 if (!result.contains("OK")) {
-                    return buildOJRecord(result, ojProblem.getPid(), testExample);
+                    return buildOJRecord(result, ojProblem.getPid(), testExample, passCount, totalCount);
                 }
+                passCount++;
             }
-            return buildOJRecord(result, ojProblem.getPid(), null);
+            return buildOJRecord(result, ojProblem.getPid(), null, passCount, totalCount);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return buildOJRecord("", ojProblem.getPid(), null);
+        return buildOJRecord("", ojProblem.getPid(), null, 0, 0);
     }
 
-    private static OJRecord buildOJRecord(String result, Integer pid, TestExample testExample) {
+    private static OJRecord buildOJRecord(String result, Integer pid, TestExample testExample, int passCount, int totalCount) {
         Integer uid = CurrentUser.getCurrentUser().getId();
         OJRecord ojRecord = new OJRecord();
         ojRecord.setUid(uid);
@@ -80,7 +83,9 @@ public class Judge {
         if (result.isEmpty()) {
             ojRecord.setTime(new BigDecimal("-1"))
                     .setInfo(OJErrorEnum.COMPILATION_ERROR.getError())
-                    .setPass(false);
+                    .setPass(false)
+                    .setPassTestExample(passCount)
+                    .setTotalTestExample(totalCount);
             return ojRecord;
         }
         result = result.replaceAll(lineSeparator, "");
@@ -91,7 +96,9 @@ public class Judge {
             int timeIndex = result.indexOf("Time");
             BigDecimal time = new BigDecimal(result.substring(timeIndex + 6, timeIndex + 11));
             ojRecord.setTime(time)
-                    .setInfo("OK");
+                    .setInfo("OK")
+                    .setPassTestExample(passCount)
+                    .setTotalTestExample(totalCount);
             return ojRecord;
         }
         int timeIndex = result.indexOf("Time");
@@ -116,7 +123,9 @@ public class Judge {
             ojRecord.setInfo(String.format(wrongAnswerInfo, testExample.getInput(), testExample.getOutput(),
                     actualOutput));
         }
-        ojRecord.setTime(new BigDecimal("-1"));
+        ojRecord.setTime(new BigDecimal("-1"))
+                .setPassTestExample(passCount)
+                .setTotalTestExample(totalCount);
         return ojRecord;
     }
 

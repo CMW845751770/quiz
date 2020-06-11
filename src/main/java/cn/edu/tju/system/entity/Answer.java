@@ -10,7 +10,6 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 @Accessors(chain = true)
 public class Answer {
@@ -24,7 +23,19 @@ public class Answer {
 
     private Integer rid;
 
+    private String optionId ;
+
     private Date createTime;
 
     private Date updateTime;
+
+    public Answer(Integer id, Integer pid, Boolean correct, Integer uid, Integer rid, Date createTime, Date updateTime) {
+        this.id = id;
+        this.pid = pid;
+        this.correct = correct;
+        this.uid = uid;
+        this.rid = rid;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+    }
 }
