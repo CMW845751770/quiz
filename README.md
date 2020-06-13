@@ -17,7 +17,7 @@
 ![enter image description here](http://img.sgxm.tech/06.PNG)
 ![enter image description here](http://img.sgxm.tech/07.PNG)
 ![enter image description here](http://img.sgxm.tech/08.PNG)
-项目的演示地址为http://47.101.33.252 因为没有备案的服务器和域名。所以直接就是用IP了。该项目是前后端分离的，前端项目地址https://github.com/DeluxeZ/oj_web
+项目的演示地址为http://47.101.33.252 因为没有备案的服务器和域名。所以直接就是用IP了。该项目是前后端分离的，前端项目地址https://github.com/SG-XM/OnlineOJ-Web
 ## 技术选型
 | 技术                 | 说明                | 官网                                                         |
 | -------------------- | ------------------- | ------------------------------------------------------------ |
